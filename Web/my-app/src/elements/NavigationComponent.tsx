@@ -2,29 +2,16 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { JSX, SVGProps, useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
-
-const themeMapping: Record<string, string> = {
-    light: 'Default',
-    'dark-classic': 'Dark',
-    tangerine: 'Tangerine',
-    'dark-tangerine': 'Tangerine (dark)',
-    mint: 'Mint',
-    'dark-mint': 'Mint (dark)',
-};
+import { JSX, SVGProps } from 'react';
+import { Dumbbell } from 'lucide-react';
 
 const NavigationComponent = () => {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
-
     return (
         <nav className='fixed inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90'>
             <div className='w-full max-w-7xl mx-auto px-4'>
                 <div className='flex justify-between h-14 items-center'>
-                    <Link href='#' className='flex items-center' prefetch={false}>
-                        <MountainIcon className='h-6 w-6' />
+                    <Link href='/' className='flex items-center' prefetch={false}>
+                        <Dumbbell className='h-6 w-6' />
                         <span className='sr-only'>Acme Inc</span>
                     </Link>
                     <nav className='hidden md:flex gap-4'>

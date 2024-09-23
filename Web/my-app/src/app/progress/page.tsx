@@ -11,7 +11,7 @@ import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartStyl
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label, Pie, PieChart, Sector } from 'recharts';
 import { PieSectorDataItem } from 'recharts/types/polar/Pie';
-import { TrendingUp } from 'lucide-react';
+import { Blend, TrendingUp } from 'lucide-react';
 import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
 export const description = 'An interactive area chart';
@@ -203,10 +203,13 @@ export default function Component() {
 
     return (
         <BasicLayout>
-            <div className='flex align-center justify-center'>
+            <div className='flex align-center justify-center mb-10 w-100'>
                 <Drawer>
                     <DrawerTrigger asChild>
-                        <Button variant='outline'>Open Drawer</Button>
+                        <Button variant='outline'>
+                            <Blend className='h-4 w-4 mr-2' />
+                            Filters
+                        </Button>
                     </DrawerTrigger>
                     <DrawerContent>
                         <div className='mx-auto w-75'>
