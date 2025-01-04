@@ -295,7 +295,7 @@ export default function Component() {
             <div className='space-y-4'>
                 <div className='flex justify-between items-center'>
                     <Select onValueChange={(value: string) => setSelectedExercise(value as Exercise)} defaultValue={Exercise.Cardio}>
-                        <SelectTrigger className='bg-gray-100 rounded-md border border-gray-300 w-64'>
+                        <SelectTrigger className='rounded-md border border-gray-300 w-64'>
                             <SelectValue placeholder='Select exercise' />
                         </SelectTrigger>
                         <SelectContent>

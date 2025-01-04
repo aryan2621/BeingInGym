@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import CalenderComponent from '@/elements/CalenderComponent';
 import ChartComponent from '@/elements/ChartComponent';
 import PieComponent from '@/elements/PieComponent';
 import PlayerComponent from '@/elements/PlayerComponent';
@@ -12,6 +11,7 @@ import { Check } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { AnimatedStatItem } from '@/elements/NumberAnimation';
+import { EventCalendar } from '@/elements/events/EventComponent';
 
 export default function Home() {
     const [annualBilling, setAnnualBilling] = useState(false);
@@ -79,15 +79,13 @@ export default function Home() {
                                 <div className='col-span-2 md:col-span-2 lg:col-span-2 rounded-lg shadow p-6'>
                                     <h3 className='text-xl font-semibold'>Exercise Distribution</h3>
                                     <p className='mt-2'>Understand the distribution of different exercises you perform.</p>
-                                    <PlayerComponent videoId='dQw4w9WgXcQ' />
+                                    <PlayerComponent videoId='dQw4w9WgXcQ' thumbnailUrl='https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg' />
                                 </div>
 
                                 <div className='col-span-1 md:col-span-2 lg:col-span-2 rounded-lg shadow p-6'>
                                     <h3 className='text-xl font-semibold'>Monthly Progress</h3>
                                     <p className='mt-2'>Track your monthly progress with our detailed charts.</p>
-                                    <div className='d-flex justify-content-center'>
-                                        <CalenderComponent />
-                                    </div>
+                                    <EventCalendar />
                                 </div>
 
                                 <div className='col-span-1 md:col-span-1 lg:col-span-1 rounded-lg shadow p-6'>

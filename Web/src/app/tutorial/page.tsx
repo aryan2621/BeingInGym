@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Exercise } from '@/utils/enum';
 import { fetchPlaylist } from '@/service/video';
+import { motion } from 'framer-motion';
+import { Loader } from 'lucide-react';
 import PlayerComponent from '@/elements/PlayerComponent';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import LoadingVideosSkeleton from '@/elements/LoadingVideosSkeletion';
 import BasicLayout from '@/layout/BasicLayout';
 
 const channelIdsMappingWithExercises: Record<Exercise, string> = {
@@ -25,6 +25,7 @@ export default function TutorialPage() {
     const [videos, setVideos] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [mainVideoId, setMainVideoId] = useState<string>('');
+    const [mainVideoUrl, setMainVideoUrl] = useState<string>('');
     const mainVideoRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -41,42 +42,47 @@ export default function TutorialPage() {
     useEffect(() => {
         if (videos.length > 0) {
             setMainVideoId(videos[0].snippet.resourceId.videoId);
+            setMainVideoUrl(videos[0].snippet.thumbnails.maxres.url);
         }
     }, [videos]);
 
-    const handleVideoClick = (videoId: string) => {
+    const handleVideoClick = (videoId: string, url: string) => {
         setMainVideoId(videoId);
+        setMainVideoUrl(url);
         mainVideoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     return (
         <BasicLayout>
-            <div className='container mx-auto p-4'>
-                <Select onValueChange={(value: string) => setSelectedExercise(value as Exercise)} defaultValue={Exercise.Cardio}>
-                    <SelectTrigger className='bg-gray-100 rounded-md border border-gray-300 w-64'>
-                        <SelectValue placeholder='Select exercise' />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {Object.values(Exercise).map((exercise) => (
-                            <SelectItem key={exercise} value={exercise}>
-                                {exercise}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
+            <div className='container mx-auto p-4 min-h-screen flex flex-col justify-center items-center'>
                 {loading ? (
+                    <div className='flex justify-center items-center h-full'>
+                        <Loader className='animate-spin' />
+                    </div>
+                ) : videos.length === 0 ? (
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className='text-center mt-4 text-gray-600'>
-                        <LoadingVideosSkeleton />
+                        No videos found
                     </motion.p>
-                ) : videos.length > 0 ? (
+                ) : (
                     <>
+                        <Select onValueChange={(value: string) => setSelectedExercise(value as Exercise)} defaultValue={Exercise.Cardio}>
+                            <SelectTrigger className='rounded-md border border-gray-300 w-64'>
+                                <SelectValue placeholder='Select exercise' />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {Object.values(Exercise).map((exercise: Exercise) => (
+                                    <SelectItem key={exercise} value={exercise}>
+                                        {exercise}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         <div
                             ref={mainVideoRef}
                             className='mt-6 w-full rounded-lg overflow-hidden shadow-lg relative bg-white transition-shadow duration-300 hover:shadow-xl'
                         >
                             <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }} className='p-2 rounded-md'>
-                                <PlayerComponent videoId={mainVideoId} />
+                                <PlayerComponent videoId={mainVideoId} thumbnailUrl={mainVideoUrl} />
                             </motion.div>
                         </div>
 
@@ -87,12 +93,12 @@ export default function TutorialPage() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 * videos.indexOf(video), duration: 0.4 }}
-                                    className='bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden cursor-pointer transform hover:scale-105'
-                                    onClick={() => handleVideoClick(video.snippet.resourceId.videoId)}
+                                    className='shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden cursor-pointer transform hover:scale-105'
+                                    onClick={() => handleVideoClick(video.snippet.resourceId.videoId, video.snippet.thumbnails.maxres.url)}
                                 >
                                     <div className='relative w-full h-48 overflow-hidden rounded-t-lg'>
                                         <Image
-                                            src={video.snippet.thumbnails.medium.url}
+                                            src={video.snippet.thumbnails.maxres.url}
                                             alt={video.snippet.title}
                                             layout='fill'
                                             objectFit='cover'
@@ -100,20 +106,12 @@ export default function TutorialPage() {
                                         />
                                     </div>
                                     <div className='p-4'>
-                                        <h3 className='text-lg font-bold text-gray-800 line-clamp-2'>{video.snippet.title}</h3>
-                                        <p className='mt-2 text-sm text-gray-600 line-clamp-2'>{video.snippet.description}</p>
+                                        <h3 className='text-lg font-bold line-clamp-2'>{video.snippet.title}</h3>
+                                        <p className='mt-2 text-sm text-foreground line-clamp-2'>{video.snippet.description}</p>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
-                    </>
-                ) : (
-                    <>
-                        {videos.length === 0 && (
-                            <>
-                                <p className='text-center mt-4 text-gray-600'>No videos found</p>
-                            </>
-                        )}
                     </>
                 )}
             </div>
